@@ -8,4 +8,4 @@ cargo run
 ```
 
 ## Shortcut
-![image](https://github.com/null2814/ru-tcp/blob/main/imgs/running_demo.png)
+![image](https://github.com/null2814/ru-tcp/blob/main/imgs/running__demo.png)
