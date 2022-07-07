@@ -9,18 +9,23 @@ fn main() -> std::io::Result<()> {
     // 循环连接
     for stream in listener.incoming() {
         // 处理连接
-        handle_connection(stream?)
+        let result = handle_connection(stream?);
+        // 模式匹配 错误处理
+        match result {
+            Ok(_) => println!("handle request in right."),
+            Err(e) => println!("handle request with error:{}", e),
+        }
     }
 
     Ok(())
 }
 
-fn handle_connection(mut stream: TcpStream) {
+fn handle_connection(mut stream: TcpStream) -> std::io::Result<()> {
     // 初始化用于从流中读取消息的缓冲区
     let mut buf = [0; 1024];
 
     // 读取流中消息到缓冲区
-    stream.read(&mut buf).unwrap();
+    stream.read(&mut buf)?;
 
     // 将缓冲区消息转为字符串
     let request = String::from_utf8_lossy(&buf[..]).to_string();
@@ -29,7 +34,9 @@ fn handle_connection(mut stream: TcpStream) {
     let response = format!("get message: {}", request);
 
     // 将回复消息写入流缓冲区
-    stream.write(response.as_bytes()).unwrap();
+    stream.write(response.as_bytes())?;
     // 将流写入缓冲区数据刷入响应
-    stream.flush().unwrap();
+    stream.flush()?;
+
+    Ok(())
 }
